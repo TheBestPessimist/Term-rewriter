@@ -13,8 +13,9 @@ public class Main {
 	private static void createLanguage() {
 		TermFactory factory = new TermFactory();
 
-		Term i = factory.createConstant("A");
-		Term j = factory.createConstant("A");
+		Constant a = factory.createConstant("A");
+		Constant b = factory.createConstant("B");
+
 		System.out.println(i + " " + j);
 	}
 }

@@ -24,4 +24,5 @@ public class TermFactory {
 	public FunctionSymbol createfunctionSymbol(int arity, String symbol) {
 		return new FunctionSymbol(arity, symbol);
 	}
+
 }
