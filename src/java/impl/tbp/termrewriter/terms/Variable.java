@@ -1,5 +1,7 @@
 package tbp.termrewriter.terms;
 
+import java.util.List;
+
 import tbp.termrewriter.term.Term;
 
 /**
@@ -26,6 +28,21 @@ public class Variable implements Term {
 	@Override
 	public String getSymbol() {
 		return symbol;
+	}
+
+	/**
+	 * What should a Variable return?
+	 */
+	@Override
+	public List<Term> getSubterms() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean equals(String symbol) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
