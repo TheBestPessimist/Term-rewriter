@@ -1,10 +1,8 @@
 package tbp.termrewriter.language;
 
 import java.util.List;
-import java.util.Set;
 
-import tbp.termrewriter.terms.FunctionSymbol;
-import tbp.termrewriter.terms.Variable;
+import tbp.termrewriter.term.Term;
 
 /**
  * The language which will be used to create the Terms.
@@ -14,28 +12,22 @@ import tbp.termrewriter.terms.Variable;
  */
 public class Language {
 
-	private List<FunctionSymbol> functionSymbols;
-	private List<Variable> variables;
+	private List<Term> language;
 
-	public Language(List<FunctionSymbol> functionSymbols,
-			List<Variable> variables) {
-		this.functionSymbols = functionSymbols;
-		this.variables = variables;
+	public List<Term> getLanguage() {
+		return language;
 	}
 
-	public List<FunctionSymbol> getFunctionSymbols() {
-		return functionSymbols;
+	public void setLanguage(List<Term> language) {
+		this.language = language;
 	}
 
-	public void setFunctionSymbols(List<FunctionSymbol> functionSymbols) {
-		this.functionSymbols = functionSymbols;
-	}
-
-	public List<Variable> getVariables() {
-		return variables;
-	}
-
-	public void setVariables(List<Variable> variables) {
-		this.variables = variables;
+	public Term getFunctionSymbol(String symbol) {
+		for (Term t : language) {
+			if (t.equals(symbol)) {
+				return t;
+			}
+		}
+		return null;
 	}
 }
