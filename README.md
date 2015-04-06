@@ -12,6 +12,8 @@
 		3. cand creem ceva, vedem daca exista symbolul in language, altfel ar trebui sa nu dam nimic inapoi?
 	- punctul 3 poate fi verificat mai in colo, presupun eu, mai important este sa facm parsarea.
 	
+	- trebuie peste tot checkuri daca face parte din language
+	- trebuie sa mai avem clasa variable?? mie mi se pare ca nu.
 
 
 ### Questions
@@ -21,5 +23,8 @@
 	- ce tinem in ele
 	- cum tinem in ele
 	- ????
+	
+	
+	
 
 
