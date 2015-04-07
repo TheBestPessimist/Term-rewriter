@@ -3,11 +3,9 @@ package tbp.termrewriter.terms;
 import java.util.ArrayList;
 import java.util.List;
 
-import tbp.termrewriter.term.Function;
-import tbp.termrewriter.term.Node;
 import tbp.termrewriter.term.Term;
 
-public class FunctionSymbol implements Term, Function, Node{
+public class FunctionSymbol implements Term {
 
 	private int arity;
 	private String symbol;
@@ -19,7 +17,6 @@ public class FunctionSymbol implements Term, Function, Node{
 		subTerms = new ArrayList<Term>();
 	}
 
-	@Override
 	public int getArity() {
 		return arity;
 	}
@@ -29,7 +26,6 @@ public class FunctionSymbol implements Term, Function, Node{
 		return symbol;
 	}
 
-	@Override
 	public List<Term> getSubterms() {
 		return subTerms;
 	}
