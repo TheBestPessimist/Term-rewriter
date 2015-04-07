@@ -1,0 +1,17 @@
+{
+	"functionSymbols":[
+	    {"symbol":"f", "arity":3}, 
+	    {"symbol":"+", "arity":2}, 
+	    {"symbol":"-", "arity":2},
+	    {"symbol":"!", "arity":1}
+	]
+	"constants":[
+	    {"symbol":"1"},
+	    {"symbol":"0"}
+	]
+	"variables":[
+		{"symbol":"x"},
+		{"symbol":"y"}
+	]
+		
+}
