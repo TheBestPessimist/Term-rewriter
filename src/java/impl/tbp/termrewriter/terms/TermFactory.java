@@ -3,6 +3,7 @@ package tbp.termrewriter.terms;
 import java.util.ArrayList;
 import java.util.List;
 
+import tbp.termrewriter.exceptions.TermNotPartOfTheLanguageException;
 import tbp.termrewriter.language.Language;
 import tbp.termrewriter.term.Term;
 
