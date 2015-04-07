@@ -28,6 +28,7 @@ public class TermFactory {
 	public FunctionSymbol createFunctionSymbolFromTerm(Term term) {
 		return new FunctionSymbol(term.getSymbol(), term.getArity());
 	}
+	
 
 	// /**
 	// *
@@ -45,6 +46,9 @@ public class TermFactory {
 	// return null;
 	// }
 
+	
+	
+	
 	public void parseStringToTerm(String s, Term root)
 			throws TermNotPartOfTheLanguageException {
 
@@ -54,7 +58,7 @@ public class TermFactory {
 					functionParts[1].length() - 1); // get rid of the last
 													// bracket
 		}
-		if (language.getFunctionSymbol(functionParts[0]) != null) {
+		if (language.getTermBySymbol(functionParts[0]) != null) {
 
 			FunctionSymbol f = createFunctionSymbolFromTerm(language
 					.getFunctionSymbol(functionParts[0]));

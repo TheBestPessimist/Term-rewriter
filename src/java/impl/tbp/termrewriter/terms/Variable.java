@@ -12,31 +12,16 @@ import tbp.termrewriter.term.Term;
 
 public class Variable implements Term {
 
-	private int arity;
 	private String symbol;
 
-	public Variable(int arity, String symbol) {
-		this.arity = arity;
+	public Variable(String symbol) {
 		this.symbol = symbol;
 	}
 
-	@Override
-	public int getArity() {
-		return arity;
-	}
 
 	@Override
 	public String getSymbol() {
 		return symbol;
-	}
-
-	/**
-	 * What should a Variable return?
-	 */
-	@Override
-	public List<Term> getSubterms() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

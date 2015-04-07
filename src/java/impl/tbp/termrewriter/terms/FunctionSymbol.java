@@ -3,9 +3,11 @@ package tbp.termrewriter.terms;
 import java.util.ArrayList;
 import java.util.List;
 
+import tbp.termrewriter.term.Function;
+import tbp.termrewriter.term.Node;
 import tbp.termrewriter.term.Term;
 
-public class FunctionSymbol implements Term {
+public class FunctionSymbol implements Term, Function, Node{
 
 	private int arity;
 	private String symbol;
