@@ -1,4 +1,4 @@
-package tbp.termrewriter.terms;
+package tbp.termrewriter.exceptions;
 
 public class TermException extends Exception {
 

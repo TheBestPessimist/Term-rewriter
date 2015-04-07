@@ -1,6 +1,5 @@
 package tbp.termrewriter.exceptions;
 
-import tbp.termrewriter.terms.TermException;
 
 public class TermNotPartOfTheLanguageException extends TermException {
 
