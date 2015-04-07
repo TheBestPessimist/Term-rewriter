@@ -13,7 +13,7 @@
 - sa adresam termenii (incepand de la root si pana la termenul care il vrem noi)
 - backreference to el padre.
 - la parsarea termenilor din string, sa se implementeze cazul pentru Variable
-- 
+- trebuie override la equals de la clasa object!
 
 
 ### Questions
