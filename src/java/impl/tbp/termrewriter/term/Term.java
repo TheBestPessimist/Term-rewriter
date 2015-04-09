@@ -4,7 +4,9 @@ public interface Term {
 
 	public String getSymbol();
 
-	public boolean equals(String symbol);
+	@Override
+	public boolean equals(Object obj);
 
-	public boolean equals(Term term);
+	// public boolean equals(String symbol);
+	// public boolean equals(Term term);
 }
