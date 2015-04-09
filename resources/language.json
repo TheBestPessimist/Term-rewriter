@@ -1,12 +1,15 @@
 {
 	"functionSymbols":[
-	    {"symbol":"f", "arity":3}, 
+	    {"symbol":"g", "arity":3},
+	    {"symbol":"f", "arity":2}, 
+	    {"symbol":"e", "arity":1},
 	    {"symbol":"+", "arity":2}, 
 	    {"symbol":"-", "arity":2},
 	    {"symbol":"!", "arity":1}
 	]
 	"constants":[
 	    {"symbol":"1"},
+	    {"symbol":"c"},
 	    {"symbol":"0"}
 	]
 	"variables":[
