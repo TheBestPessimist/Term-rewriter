@@ -4,7 +4,6 @@ import java.io.File;
 
 import tbp.termrewriter.exceptions.TermException;
 import tbp.termrewriter.language.LanguageReader;
-import tbp.termrewriter.term.Term;
 import tbp.termrewriter.terms.TermFactory;
 
 public class Main {
@@ -16,19 +15,16 @@ public class Main {
 		TermFactory factory = new TermFactory();
 		LanguageReader languageReader = new LanguageReader(new File(
 				"resources/language.json"));
-		factory.setLanguage(languageReader.getLanguage());
+		factory.setLanguage(languageReader.readLanguage());
 
-		// System.out.println(Arrays.toString(factory.getLanguage().getLanguage()
-		// .toArray()));
-		String inputTerm = "f(c,e(f(e(c),e(c))))";
+		// System.out.println(Arrays.toString(factory.getLanguage().getLanguage().toArray()));
 
-		Term ouput = factory.createFunctionSymbol("a", 1);
-
-		factory.parseStringToTerm(inputTerm, ouput);
-		// Term rootOfTree = output.
-		System.out.println(factory.deepToString(ouput));
+		String inputString = "f(c,e(f(e(c),g(c,1,y))))";
+		// String inputString = "g(c,1,y)";
+		factory.parseStringToTerm(inputString);
+		//
+		// System.out.println(factory.deepToString(ouput));
 	}
-
 	// /**
 	// * Create a simple language.
 	// *
