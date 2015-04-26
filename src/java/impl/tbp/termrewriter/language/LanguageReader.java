@@ -9,7 +9,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import tbp.termrewriter.terms.FunctionSymbol;
-import tbp.termrewriter.terms.Variable;
+import tbp.termrewriter.terms.VariableSymbol;
 
 /**
  * Generate language based on input received from JSON file
@@ -56,7 +56,7 @@ public class LanguageReader {
 			it = outerArray.iterator();
 			while (it.hasNext()) {
 				JSONObject innerObj = (JSONObject) it.next();
-				language.addTerm(new Variable((String) innerObj.get("symbol")));
+				language.addTerm(new VariableSymbol((String) innerObj.get("symbol")));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

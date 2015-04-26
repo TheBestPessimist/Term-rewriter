@@ -4,16 +4,16 @@ import tbp.termrewriter.term.Term;
 
 /**
  * This represents a variable symbol. There are no setters as we do not want to
- * change the symbol of this Variable. If such need arises, then a new Variable
+ * change the symbol of this VariableSymbol. If such need arises, then a new VariableSymbol
  * should be created!
  */
 
-public class Variable implements Term {
+public class VariableSymbol implements Term {
 
 	private String symbol;
 	private Term parent;
 
-	public Variable(String symbol) {
+	public VariableSymbol(String symbol) {
 		this.symbol = symbol;
 	}
 
@@ -49,7 +49,7 @@ public class Variable implements Term {
 
 	@Override
 	public String toString() {
-		return "Variable [symbol=" + symbol + "]";
+		return "VariableSymbol [symbol=" + symbol + "]";
 	}
 
 }
