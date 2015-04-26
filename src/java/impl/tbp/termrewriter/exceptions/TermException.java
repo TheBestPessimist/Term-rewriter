@@ -6,8 +6,7 @@ package tbp.termrewriter.exceptions;
 @SuppressWarnings("serial")
 public class TermException extends Exception {
 
-	public TermException(String exceptionMessage) {
-		super(exceptionMessage);
-	}
-
+    public TermException(String exceptionMessage) {
+        super(exceptionMessage);
+    }
 }

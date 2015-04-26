@@ -2,9 +2,9 @@ package tbp.termrewriter.term;
 
 public interface Term {
 
-	public String getSymbol();
+    public String getSymbol();
 
-	@Override
-	public boolean equals(Object obj);
+    @Override
+    public boolean equals(Object obj);
 
 }
