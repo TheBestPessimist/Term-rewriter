@@ -13,58 +13,58 @@ import tbp.termrewriter.term.Term;
 
 public class FunctionSymbol implements Term {
 
-	private int arity;
-	private String symbol;
-	private List<Term> subTerms;
-	private Term parent;
+    private int arity;
+    private String symbol;
+    private List<Term> subTerms;
+    private Term parent;
 
-	public FunctionSymbol(String symbol, int arity) {
-		this.arity = arity;
-		this.symbol = symbol;
-		subTerms = new ArrayList<Term>();
-	}
+    public FunctionSymbol(String symbol, int arity) {
+        this.arity = arity;
+        this.symbol = symbol;
+        subTerms = new ArrayList<Term>();
+    }
 
-	public int getArity() {
-		return arity;
-	}
+    public int getArity() {
+        return arity;
+    }
 
-	@Override
-	public String getSymbol() {
-		return symbol;
-	}
+    @Override
+    public String getSymbol() {
+        return symbol;
+    }
 
-	public List<Term> getSubterms() {
-		return subTerms;
-	}
+    public List<Term> getSubterms() {
+        return subTerms;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		return getSymbol().equals(obj);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        return getSymbol().equals(obj);
+    }
 
-	@Override
-	public int hashCode() {
-		return getSymbol().hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return getSymbol().hashCode();
+    }
 
-	@Override
-	public String toString() {
-		return "FunctionSymbol [arity=" + arity + ", symbol=" + symbol + "]";
-	}
+    @Override
+    public String toString() {
+        return "FunctionSymbol [arity=" + arity + ", symbol=" + symbol + "]";
+    }
 
-	/**
-	 * @return the parent
-	 */
-	public Term getParent() {
-		return parent;
-	}
+    /**
+     * @return the parent
+     */
+    public Term getParent() {
+        return parent;
+    }
 
-	/**
-	 * @param parent
-	 *            the parent to set
-	 */
-	public void setParent(Term parent) {
-		this.parent = parent;
-	}
+    /**
+     * @param parent
+     *            the parent to set
+     */
+    public void setParent(Term parent) {
+        this.parent = parent;
+    }
 
 }
