@@ -82,13 +82,26 @@ public class TermUtils {
                 currentFunctionSymbol.setParent(root);
 
                 if (functionParts.length > 1) {
-                    // check good arity with regard to the remaining input
-                    // variables
+                    // check good arity with regard to the remaining input variables
                     String variables[] = getCurrentLevelVariablesFromInputString(functionParts[1]);
                     if (variables.length == currentFunctionSymbol.getArity()) {
                         for (String variable : variables) {
                             parseStringToTerm(variable, currentFunctionSymbol);
                         }
+                    } else {
+                        // TODO throw new badInputStringException
+                        try {
+                            throw new OperationNotSupportedException();
+                        } catch (OperationNotSupportedException e) {
+                            System.out.println("Unexpected Exception (badInputStringException @ function symbol): " + e);
+                        }
+                    }
+                } else if (currentFunctionSymbol.getArity() > 0) {
+                    // TODO throw new badInputStringException
+                    try {
+                        throw new OperationNotSupportedException();
+                    } catch (OperationNotSupportedException e) {
+                        System.out.println("Unexpected Exception (badInputStringException @ function symbol): " + e);
                     }
                 }
                 // handle Variables
@@ -176,9 +189,8 @@ public class TermUtils {
     }
 
     /**
-     * Get the subterm in the tree at the position specified in the array. The
-     * numbers in the array signify what subterm of the current term will be
-     * returned, recursively.
+     * Get the subterm in the tree at the position specified in the array. The numbers in the array signify what subterm of the current term will be returned,
+     * recursively.
      * 
      * Position counting starts at 0.
      * 
@@ -196,6 +208,9 @@ public class TermUtils {
         if (root instanceof FunctionSymbol) {
             FunctionSymbol currentFunctionSymbol = (FunctionSymbol) root;
             int subtermsSize = currentFunctionSymbol.getSubterms().size();
+            if (subtermsSize == 0) {
+                return currentFunctionSymbol;
+            }
             if (subtermsSize > subtermPositions[currentPosition] && subtermPositions[currentPosition] >= 0) {
                 if (currentPosition == subtermPositions.length - 1) {
                     return currentFunctionSymbol;
