@@ -15,6 +15,7 @@ public class Main {
         factory.setLanguage(languageReader.readLanguage());
 
         String inputString = "f(c,e(f(e(c),g(c,1,y))))";
+        // String inputString = "c";
         Term root = factory.parseStringToTerm(inputString);
 
         System.out.println(factory.deepToString(root));
