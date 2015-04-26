@@ -48,9 +48,9 @@ public class TermFactory {
 		}
 	}
 
-	private Variable createVariableFromTerm(Term term) {
-		if (term instanceof Variable) {
-			return new Variable(term.getSymbol());
+	private VariableSymbol createVariableFromTerm(Term term) {
+		if (term instanceof VariableSymbol) {
+			return new VariableSymbol(term.getSymbol());
 		} else {
 
 			// TODO not a VariableException?
@@ -100,8 +100,8 @@ public class TermFactory {
 					}
 				}
 				// handle Variables
-			} else if (currentTerm instanceof Variable) {
-				Variable currentVariable = createVariableFromTerm(currentTerm);
+			} else if (currentTerm instanceof VariableSymbol) {
+				VariableSymbol currentVariable = createVariableFromTerm(currentTerm);
 				// add this new variable
 				((FunctionSymbol) root).getSubterms().add(currentVariable);
 				currentVariable.setParent(root);
@@ -161,7 +161,7 @@ public class TermFactory {
 				}
 				deepToString(subterm, out, indent + 1);
 			}
-		} else if (root instanceof Variable) {
+		} else if (root instanceof VariableSymbol) {
 			// this is already handled above
 		} else {
 			throw new NotATermException(root.toString());
@@ -225,8 +225,8 @@ public class TermFactory {
 				// exception?
 				return null;
 			}
-		} else if (root instanceof Variable) {
-			Variable currentVariable = (Variable) root;
+		} else if (root instanceof VariableSymbol) {
+			VariableSymbol currentVariable = (VariableSymbol) root;
 			if (currentPosition == subtermPositions.length - 1) {
 				return currentVariable;
 			} else {
