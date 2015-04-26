@@ -8,13 +8,15 @@
 	
 	
 ### TODO
-	- trebuie peste tot checkuri daca face parte din language (@Calin?)
-	- trebuie sa scapam de termenul dummy cand facem parsarea sirului (@Calin)
-	- sa adresam termenii (incepand de la root si pana la termenul care il vrem noi)
+- trebuie peste tot checkuri daca face parte din language
+- trebuie sa scapam de termenul dummy cand facem parsarea sirului
+- sa adresam termenii (incepand de la root si pana la termenul care il vrem noi)
+- backreference to el padre.
+- la parsarea termenilor din string, sa se implementeze cazul pentru Variable
+- trebuie override la equals de la clasa object!
 
 
 ### Questions
-	- trebuie sa mai avem clasa variable?? mie mi se pare ca nu.
 		
 	
 ### Done

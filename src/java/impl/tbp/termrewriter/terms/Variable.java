@@ -1,7 +1,5 @@
 package tbp.termrewriter.terms;
 
-import java.util.List;
-
 import tbp.termrewriter.term.Term;
 
 /**
@@ -12,17 +10,11 @@ import tbp.termrewriter.term.Term;
 
 public class Variable implements Term {
 
-	private int arity;
 	private String symbol;
+	private Term parent;
 
-	public Variable(int arity, String symbol) {
-		this.arity = arity;
+	public Variable(String symbol) {
 		this.symbol = symbol;
-	}
-
-	@Override
-	public int getArity() {
-		return arity;
 	}
 
 	@Override
@@ -31,18 +23,33 @@ public class Variable implements Term {
 	}
 
 	/**
-	 * What should a Variable return?
+	 * @return the parent
 	 */
-	@Override
-	public List<Term> getSubterms() {
-		// TODO Auto-generated method stub
-		return null;
+	public Term getParent() {
+		return parent;
+	}
+
+	/**
+	 * @param parent
+	 *            the parent to set
+	 */
+	public void setParent(Term parent) {
+		this.parent = parent;
 	}
 
 	@Override
-	public boolean equals(String symbol) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean equals(Object obj) {
+		return getSymbol().equals(obj);
+	};
+
+	@Override
+	public int hashCode() {
+		return getSymbol().hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "Variable [symbol=" + symbol + "]";
 	}
 
 }
