@@ -10,12 +10,12 @@ import tbp.termrewriter.exceptions.TermNotPartOfTheLanguageException;
 import tbp.termrewriter.language.Language;
 import tbp.termrewriter.term.Term;
 
-public class TermFactory {
+public class TermUtils {
 
 	private static final String VIRTUAL_FUNCTION_SYMBOL_FOR_PRINTING = "virtualFunctionSymbolForPrinting";
 	private Language language;
 
-	public TermFactory() {
+	public TermUtils() {
 	}
 
 	public Language getLanguage() {

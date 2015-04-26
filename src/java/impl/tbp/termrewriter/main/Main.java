@@ -5,12 +5,12 @@ import java.io.File;
 import tbp.termrewriter.exceptions.TermException;
 import tbp.termrewriter.language.LanguageReader;
 import tbp.termrewriter.term.Term;
-import tbp.termrewriter.terms.TermFactory;
+import tbp.termrewriter.terms.TermUtils;
 
 public class Main {
 
 	public static void main(String[] args) throws TermException {
-		TermFactory factory = new TermFactory();
+		TermUtils factory = new TermUtils();
 		LanguageReader languageReader = new LanguageReader(new File(
 				"resources/language.json"));
 		factory.setLanguage(languageReader.readLanguage());
