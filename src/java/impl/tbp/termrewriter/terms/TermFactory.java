@@ -36,7 +36,7 @@ public class TermFactory {
 					((FunctionSymbol) term).getArity());
 		} else {
 
-			// not a functionSymbolException?
+			// TODO not a functionSymbolException?
 			try {
 				throw new OperationNotSupportedException();
 			} catch (OperationNotSupportedException e) {
@@ -53,7 +53,7 @@ public class TermFactory {
 			return new Variable(term.getSymbol());
 		} else {
 
-			// not a VariableException?
+			// TODO not a VariableException?
 			try {
 				throw new OperationNotSupportedException();
 			} catch (OperationNotSupportedException e) {
@@ -64,22 +64,6 @@ public class TermFactory {
 			}
 		}
 	}
-
-	// /**
-	// *
-	// * @param s
-	// * @return
-	// *
-	// * Rules to parse a string into terms:
-	// */
-	// public Term parseStringToTerm(String s) {
-	// Term root = new FunctionSymbol
-	//
-	// // System.out.println(Arrays.toString(functionParts));
-	// // System.out.println(functionParts.length);
-	//
-	// return null;
-	// }
 
 	public void parseStringToTerm(String s, Term root)
 			throws TermNotPartOfTheLanguageException {
@@ -124,7 +108,7 @@ public class TermFactory {
 
 				// check good arity with regard to the remaining input variables
 				if (functionParts.length > 1) {
-					// throw new badInputStringException
+					// TODO throw new badInputStringException
 					try {
 						throw new OperationNotSupportedException();
 					} catch (OperationNotSupportedException e) {
@@ -197,16 +181,64 @@ public class TermFactory {
 	 * @param inputString
 	 * @throws TermNotPartOfTheLanguageException
 	 */
-	public void parseStringToTerm(String inputString)
+	public Term parseStringToTerm(String inputString)
 			throws TermNotPartOfTheLanguageException {
 		Term root = new FunctionSymbol(VIRTUAL_FUNCTION_SYMBOL_FOR_PRINTING, 1);
 
 		parseStringToTerm(inputString, root);
 
-		try {
-			System.out.println(deepToString(root));
-		} catch (NotATermException e) {
-			System.out.println("Unexpected Exception: " + e);
+		return getSubterm(root, new int[] { 0, 0 });
+
+	}
+
+	/**
+	 * Get the subterm in the tree at the position specified in the array. The
+	 * numbers in the array signify what subterm of the current term will be
+	 * returned, recursively.
+	 * 
+	 * Position counting starts at 0.
+	 * 
+	 * @param subterms
+	 *            the array containing the positions
+	 * @return
+	 */
+	// TODO should throw subterm does not exist exception?
+
+	public Term getSubterm(Term root, int[] subtermPositions) {
+		return getSubtermRecursively(root, subtermPositions, 0);
+	}
+
+	private Term getSubtermRecursively(Term root, int[] subtermPositions,
+			int currentPosition) {
+		if (root instanceof FunctionSymbol) {
+			FunctionSymbol currentFunctionSymbol = (FunctionSymbol) root;
+			int subtermsSize = currentFunctionSymbol.getSubterms().size();
+			if (subtermsSize > subtermPositions[currentPosition]
+					&& subtermPositions[currentPosition] >= 0) {
+				if (currentPosition == subtermPositions.length - 1) {
+					return currentFunctionSymbol;
+				} else {
+					return getSubtermRecursively(
+							currentFunctionSymbol.getSubterms().get(
+									subtermPositions[currentPosition]),
+							subtermPositions, ++currentPosition);
+				}
+			} else {
+				// TODO i can't address outside of any of the 2 arrays.
+				// exception?
+				return null;
+			}
+		} else if (root instanceof Variable) {
+			Variable currentVariable = (Variable) root;
+			if (currentPosition == subtermPositions.length - 1) {
+				return currentVariable;
+			} else {
+				// TODO here i can't address anything else. exception???
+				return null;
+			}
 		}
+		// TODO nothing should be here. EXCEPTION!!!
+		return null;
+
 	}
 }
