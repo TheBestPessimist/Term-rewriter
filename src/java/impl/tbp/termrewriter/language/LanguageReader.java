@@ -37,7 +37,7 @@ public class LanguageReader {
 			JSONArray outerArray = (JSONArray) jsonObject
 					.get("functionSymbols");
 
-			Iterator it = outerArray.iterator();
+			Iterator<?> it = outerArray.iterator();
 			while (it.hasNext()) {
 				JSONObject innerObj = (JSONObject) it.next();
 				String symbol = (String) innerObj.get("symbol");
