@@ -25,22 +25,4 @@ public class Main {
 		//
 		// System.out.println(factory.deepToString(ouput));
 	}
-	// /**
-	// * Create a simple language.
-	// *
-	// * @return the language
-	// */
-	// private TermFactory createFactory() {
-	// TermFactory factory = new TermFactory();
-	// ArrayList<Term> language = new ArrayList<Term>();
-	//
-	// language.add(new FunctionSymbol("c", 0));
-	// language.add(new FunctionSymbol("e", 1));
-	// language.add(new FunctionSymbol("f", 2));
-	// Language l = new Language();
-	// l.setLanguage(language);
-	// factory.setLanguage(l);
-	//
-	// return factory;
-	// }
 }
