@@ -162,10 +162,7 @@ public class TermFactory {
 				deepToString(subterm, out, indent + 1);
 			}
 		} else if (root instanceof Variable) {
-			for (int i = 0; i <= indent; ++i) {
-				out.append("---");
-			}
-			out.append(root);
+			// this is already handled above
 		} else {
 			throw new NotATermException(root.toString());
 		}
