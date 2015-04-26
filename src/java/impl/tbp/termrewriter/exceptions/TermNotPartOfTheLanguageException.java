@@ -1,7 +1,6 @@
 package tbp.termrewriter.exceptions;
 
-import tbp.termrewriter.terms.TermException;
-
+@SuppressWarnings("serial")
 public class TermNotPartOfTheLanguageException extends TermException {
 
 	public TermNotPartOfTheLanguageException(String exceptionMessage) {
