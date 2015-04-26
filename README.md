@@ -9,11 +9,6 @@
 	
 ### TODO
 - trebuie peste tot checkuri daca face parte din language
-- trebuie sa scapam de termenul dummy cand facem parsarea sirului
-- sa adresam termenii (incepand de la root si pana la termenul care il vrem noi)
-- backreference to el padre.
-- la parsarea termenilor din string, sa se implementeze cazul pentru Variable
-- trebuie override la equals de la clasa object!
 
 
 ### Questions
@@ -30,3 +25,8 @@
 - lista de constante
 - lista de function symbols
 - lista de cum se sparg termenii? (the language)
+- trebuie sa scapam de termenul dummy cand facem parsarea sirului
+- sa adresam termenii (incepand de la root si pana la termenul care il vrem noi)
+- backreference to el padre.
+- la parsarea termenilor din string, sa se implementeze cazul pentru Variable
+- trebuie override la equals de la clasa object!
