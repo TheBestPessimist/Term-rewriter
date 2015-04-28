@@ -12,7 +12,7 @@
 
 
 ### Questions
-		
+- how to implement deepEquals???
 	
 ### Done
 - ar trebui sa fac si constants si function symbols, sau doar function symbols? (tinand cont ca constants au arity 0)
