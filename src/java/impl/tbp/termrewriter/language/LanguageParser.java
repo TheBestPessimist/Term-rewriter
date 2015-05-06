@@ -17,12 +17,12 @@ import tbp.termrewriter.terms.VariableSymbol;
  * @author alex
  *
  */
-public class LanguageReader {
+public class LanguageParser {
 
     private File languageFile;
     private Language language;
 
-    public LanguageReader(File languageFile) {
+    public LanguageParser(File languageFile) {
         this.languageFile = languageFile;
         language = new Language();
         generateLanguage();
