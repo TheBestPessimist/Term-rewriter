@@ -18,7 +18,7 @@ public class Main {
         // String inputString = "c";
         Term root = utils.parseStringToTerm(inputString);
 
-        Term subterm = utils.getSubterm(root, new int[] { 2, 1, 0, 1 });
+        Term subterm = utils.getSubterm(root, new int[] { 1, 0, 1 });
 
         System.out.println(utils.deepToString(root));
         System.out.println(utils.deepToString(subterm));
