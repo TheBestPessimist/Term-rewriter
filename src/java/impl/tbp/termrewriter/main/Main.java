@@ -3,7 +3,7 @@ package tbp.termrewriter.main;
 import java.io.File;
 
 import tbp.termrewriter.exceptions.TermException;
-import tbp.termrewriter.language.LanguageReader;
+import tbp.termrewriter.language.LanguageParser;
 import tbp.termrewriter.term.Term;
 import tbp.termrewriter.terms.TermUtils;
 
@@ -11,8 +11,8 @@ public class Main {
 
     public static void main(String[] args) throws TermException {
         TermUtils utils = new TermUtils();
-        LanguageReader languageReader = new LanguageReader(new File("resources/language.json"));
-        utils.setLanguage(languageReader.readLanguage());
+        LanguageParser languageParser = new LanguageParser(new File("resources/language.json"));
+        utils.setLanguage(languageParser.readLanguage());
 
         String inputString = "f(c,e(f(e(c),g(c,1,y))))";
         // String inputString = "c";
