@@ -1,9 +1,7 @@
 ### TODO
-1 collect variable names during parsing
 2 substitution of a variable with a term;
 
 - trebuie peste tot checkuri daca face parte din language
-- trebuie ca tot ceea ce nu este functie, sa fie cu nume variabil. altfel spus, eu nu trebuie sa dau la inceput variabile.
 - sa implementez substitution of a term with another.
 - ca sa implementez acel function match, eu tre sa ma plimb prin tot treeul,si sa caut functii, care se aplica la functii, si variabile.. variabilele pot sa fie diferite! practic e shittons of recursive calls.
 
@@ -26,6 +24,9 @@
 - backreference to el padre.
 - la parsarea termenilor din string, sa se implementeze cazul pentru Variable
 - trebuie override la equals de la clasa object!
+- collect variable names during parsing
+
+
 
 ### whatever
 - reduction se afla in capitolul 2
