@@ -3,16 +3,13 @@ package tbp.termrewriter.terms;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.OperationNotSupportedException;
-
-import tbp.termrewriter.exceptions.NotATermException;
-import tbp.termrewriter.exceptions.TermNotPartOfTheLanguageException;
+import tbp.termrewriter.exceptions.TermException;
 import tbp.termrewriter.language.Language;
 import tbp.termrewriter.term.Term;
 
 public class TermUtils {
 
-    private static final String VIRTUAL_FUNCTION_SYMBOL_FOR_PRINTING = "virtualFunctionSymbolForPrinting";
+    private static final String VIRTUAL_FUNCTION_SYMBOL_FOR_PARSING = "virtualFunctionSymbolForParsing";
     private Language language;
 
     public TermUtils() {
@@ -30,37 +27,37 @@ public class TermUtils {
         return new FunctionSymbol(symbol, arity);
     }
 
+    /**
+     * Creates a new function symbol which has the same symbol and arity as the term.
+     * 
+     * @param term
+     * @return the newly created function symbol, or null if the term is not a function symbol
+     */
     public FunctionSymbol createFunctionSymbolFromTerm(Term term) {
         if (term instanceof FunctionSymbol) {
             return new FunctionSymbol(term.getSymbol(), ((FunctionSymbol) term).getArity());
-        } else {
-
-            // TODO not a functionSymbolException?
-            try {
-                throw new OperationNotSupportedException();
-            } catch (OperationNotSupportedException e) {
-                System.out.println("Unexpected Exception ( not a functionSymbol: " + e);
-                return null;
-            }
         }
+        // not a functionSymbol Exception
+        System.out.println("the term " + term + " is not a functionSymbol");
+        return null;
     }
 
+    /**
+     * Creates a new variable which has the same symbol as the term.
+     * 
+     * @param term
+     * @return the newly created variable, or null if the term is not a variable
+     */
     private VariableSymbol createVariableFromTerm(Term term) {
         if (term instanceof VariableSymbol) {
             return new VariableSymbol(term.getSymbol());
-        } else {
-
-            // TODO not a VariableException?
-            try {
-                throw new OperationNotSupportedException();
-            } catch (OperationNotSupportedException e) {
-                System.out.println("Unexpected Exception (not a variable exception: " + e);
-                return null;
-            }
         }
+        // not a VariableException?
+        System.out.println("the term " + term + " is not a variable");
+        return null;
     }
 
-    public void parseStringToTerm(String s, Term root) throws TermNotPartOfTheLanguageException {
+    public void parseStringToTerm(String s, Term root) throws TermException {
 
         // the "parantheses"
         String[] functionParts = s.split("\\(", 2);
@@ -73,11 +70,10 @@ public class TermUtils {
         Term currentTerm = language.getTermBySymbol(functionParts[0]);
 
         if (currentTerm != null) {
-
-            // handle FunctionSymbols
             if (currentTerm instanceof FunctionSymbol) {
+                // handle FunctionSymbols
                 FunctionSymbol currentFunctionSymbol = createFunctionSymbolFromTerm(currentTerm);
-                // add this new variable
+                // add this new function
                 ((FunctionSymbol) root).getSubterms().add(currentFunctionSymbol);
                 currentFunctionSymbol.setParent(root);
 
@@ -89,23 +85,13 @@ public class TermUtils {
                             parseStringToTerm(variable, currentFunctionSymbol);
                         }
                     } else {
-                        // TODO throw new badInputStringException
-                        try {
-                            throw new OperationNotSupportedException();
-                        } catch (OperationNotSupportedException e) {
-                            System.out.println("Unexpected Exception (badInputStringException @ function symbol): " + e);
-                        }
+                        throw new TermException("bad input string: not enough parameters in the inputString for functionSymbol " + currentFunctionSymbol);
                     }
                 } else if (currentFunctionSymbol.getArity() > 0) {
-                    // TODO throw new badInputStringException
-                    try {
-                        throw new OperationNotSupportedException();
-                    } catch (OperationNotSupportedException e) {
-                        System.out.println("Unexpected Exception (badInputStringException @ function symbol): " + e);
-                    }
+                    throw new TermException("bad input string: too many parameters in the inputString for functionSymbol " + currentFunctionSymbol);
                 }
-                // handle Variables
             } else if (currentTerm instanceof VariableSymbol) {
+                // handle Variables
                 VariableSymbol currentVariable = createVariableFromTerm(currentTerm);
                 // add this new variable
                 ((FunctionSymbol) root).getSubterms().add(currentVariable);
@@ -113,16 +99,11 @@ public class TermUtils {
 
                 // check good arity with regard to the remaining input variables
                 if (functionParts.length > 1) {
-                    // TODO throw new badInputStringException
-                    try {
-                        throw new OperationNotSupportedException();
-                    } catch (OperationNotSupportedException e) {
-                        System.out.println("Unexpected Exception (badInputStringException @ variable): " + e);
-                    }
+                    throw new TermException("bad input string: a variable should have no parameters in the inputString " + currentVariable);
                 }
             }
         } else {
-            throw new TermNotPartOfTheLanguageException(functionParts[0]);
+            throw new TermException("term not part of the language: " + functionParts[0]);
         }
     }
 
@@ -151,7 +132,7 @@ public class TermUtils {
         return variables.toArray(new String[0]);
     }
 
-    private void deepToString(Term root, StringBuilder out, int indent) throws NotATermException {
+    private void deepToString(Term root, StringBuilder out, int indent) throws TermException {
         out.append(root);
         out.append("\n");
         if (root instanceof FunctionSymbol) {
@@ -164,12 +145,13 @@ public class TermUtils {
             }
         } else if (root instanceof VariableSymbol) {
             // this is already handled above
+            throw new TermException("i shouldn't be here!");
         } else {
-            throw new NotATermException(root.toString());
+            throw new TermException("" + root + " is not a term");
         }
     }
 
-    public String deepToString(Term root) throws NotATermException {
+    public String deepToString(Term root) throws TermException {
         StringBuilder out = new StringBuilder();
         deepToString(root, out, 0);
         return out.toString();
@@ -177,15 +159,15 @@ public class TermUtils {
 
     /**
      * @param inputString
+     * @throws TermException
      * @throws TermNotPartOfTheLanguageException
      */
-    public Term parseStringToTerm(String inputString) throws TermNotPartOfTheLanguageException {
-        Term root = new FunctionSymbol(VIRTUAL_FUNCTION_SYMBOL_FOR_PRINTING, 1);
+    public Term parseStringToTerm(String inputString) throws TermException {
+        Term root = new FunctionSymbol(VIRTUAL_FUNCTION_SYMBOL_FOR_PARSING, 1);
 
         parseStringToTerm(inputString, root);
 
         return getSubterm(root, new int[] { 0 });
-
     }
 
     /**
@@ -224,8 +206,7 @@ public class TermUtils {
                             ++currentPosition);
                 }
             } else {
-                // TODO i can't address outside of any of the 2 arrays.
-                // exception?
+                // TODO i can't address outside of any of the 2 arrays. exception?
                 return null;
             }
         } else if (root instanceof VariableSymbol) {
