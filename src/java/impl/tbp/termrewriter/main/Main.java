@@ -15,12 +15,15 @@ public class Main {
         utils.setLanguage(languageParser.readLanguage());
 
         String inputString = "f(c,e(f(e(c),g(c,1,y))))";
-        // String inputString = "c";
+        // String inputString = "()aaaa av";
+        // String inputString = "1()";
+        // String inputString = "f(aaaa, aaaa)";
+        // String inputString = "g(c,1,y)";
         Term root = utils.parseStringToTerm(inputString);
 
-        Term subterm = utils.getSubterm(root, new int[] { 1, 0, 1 });
+        // Term subterm = utils.getSubterm(root, new int[] { 1, 0, 1 });
 
         System.out.println(utils.deepToString(root));
-        System.out.println(utils.deepToString(subterm));
+        // System.out.println(utils.deepToString(subterm));
     }
 }
