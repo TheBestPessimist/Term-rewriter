@@ -145,7 +145,6 @@ public class TermUtils {
             }
         } else if (root instanceof VariableSymbol) {
             // this is already handled above
-            throw new TermException("i shouldn't be here!");
         } else {
             throw new TermException("" + root + " is not a term");
         }
