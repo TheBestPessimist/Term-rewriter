@@ -10,14 +10,17 @@ import tbp.termrewriter.terms.TermUtils;
 public class Main {
 
     public static void main(String[] args) throws TermException {
-        TermUtils factory = new TermUtils();
+        TermUtils utils = new TermUtils();
         LanguageReader languageReader = new LanguageReader(new File("resources/language.json"));
-        factory.setLanguage(languageReader.readLanguage());
+        utils.setLanguage(languageReader.readLanguage());
 
         String inputString = "f(c,e(f(e(c),g(c,1,y))))";
         // String inputString = "c";
-        Term root = factory.parseStringToTerm(inputString);
+        Term root = utils.parseStringToTerm(inputString);
 
-        System.out.println(factory.deepToString(root));
+        Term subterm = utils.getSubterm(root, new int[] { 2, 1, 0, 1 });
+
+        System.out.println(utils.deepToString(root));
+        System.out.println(utils.deepToString(subterm));
     }
 }

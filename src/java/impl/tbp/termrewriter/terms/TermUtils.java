@@ -184,7 +184,7 @@ public class TermUtils {
 
         parseStringToTerm(inputString, root);
 
-        return getSubterm(root, new int[] { 0, 0 });
+        return getSubterm(root, new int[] { 0 });
 
     }
 
@@ -204,18 +204,23 @@ public class TermUtils {
         return getSubtermRecursively(root, subtermPositions, 0);
     }
 
-    private Term getSubtermRecursively(Term root, int[] subtermPositions, int currentPosition) {
+    private Term getSubtermRecursively(Term root, int[] inputSubtermPositions, int currentPosition) {
         if (root instanceof FunctionSymbol) {
             FunctionSymbol currentFunctionSymbol = (FunctionSymbol) root;
             int subtermsSize = currentFunctionSymbol.getSubterms().size();
             if (subtermsSize == 0) {
+                // if i want to access subterms when i can't
+                if (currentPosition != inputSubtermPositions.length - 1) {
+                    return null;
+                }
                 return currentFunctionSymbol;
             }
-            if (subtermsSize > subtermPositions[currentPosition] && subtermPositions[currentPosition] >= 0) {
-                if (currentPosition == subtermPositions.length - 1) {
-                    return currentFunctionSymbol;
+            // check if i have valid position and array size
+            if (subtermsSize > inputSubtermPositions[currentPosition] && inputSubtermPositions[currentPosition] >= 0) {
+                if (currentPosition == inputSubtermPositions.length - 1) {
+                    return currentFunctionSymbol.getSubterms().get(inputSubtermPositions[currentPosition]);
                 } else {
-                    return getSubtermRecursively(currentFunctionSymbol.getSubterms().get(subtermPositions[currentPosition]), subtermPositions,
+                    return getSubtermRecursively(currentFunctionSymbol.getSubterms().get(inputSubtermPositions[currentPosition]), inputSubtermPositions,
                             ++currentPosition);
                 }
             } else {
@@ -225,7 +230,7 @@ public class TermUtils {
             }
         } else if (root instanceof VariableSymbol) {
             VariableSymbol currentVariable = (VariableSymbol) root;
-            if (currentPosition == subtermPositions.length - 1) {
+            if (currentPosition == inputSubtermPositions.length - 1) {
                 return currentVariable;
             } else {
                 // TODO here i can't address anything else. exception???
@@ -234,6 +239,5 @@ public class TermUtils {
         }
         // TODO nothing should be here. EXCEPTION!!!
         return null;
-
     }
 }
