@@ -9,7 +9,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import tbp.termrewriter.terms.FunctionSymbol;
-import tbp.termrewriter.terms.VariableSymbol;
 
 /**
  * Generate language based on input received from JSON file
@@ -17,12 +16,12 @@ import tbp.termrewriter.terms.VariableSymbol;
  * @author alex
  *
  */
-public class LanguageReader {
+public class LanguageParser {
 
     private File languageFile;
     private Language language;
 
-    public LanguageReader(File languageFile) {
+    public LanguageParser(File languageFile) {
         this.languageFile = languageFile;
         language = new Language();
         generateLanguage();
@@ -49,12 +48,6 @@ public class LanguageReader {
             while (it.hasNext()) {
                 JSONObject innerObj = (JSONObject) it.next();
                 language.addTerm(new FunctionSymbol((String) innerObj.get("symbol"), 0));
-            }
-            outerArray = (JSONArray) jsonObject.get("variables");
-            it = outerArray.iterator();
-            while (it.hasNext()) {
-                JSONObject innerObj = (JSONObject) it.next();
-                language.addTerm(new VariableSymbol((String) innerObj.get("symbol")));
             }
         } catch (Exception e) {
             e.printStackTrace();

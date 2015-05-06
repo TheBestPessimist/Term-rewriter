@@ -57,7 +57,7 @@ public class TermUtils {
         return null;
     }
 
-    public void parseStringToTerm(String s, Term root) throws TermException {
+    private void parseStringToTerm(String s, Term root) throws TermException {
 
         // the "parantheses"
         String[] functionParts = s.split("\\(", 2);
@@ -69,45 +69,53 @@ public class TermUtils {
 
         Term currentTerm = language.getTermBySymbol(functionParts[0]);
 
-        if (currentTerm != null) {
-            if (currentTerm instanceof FunctionSymbol) {
-                // handle FunctionSymbols
-                FunctionSymbol currentFunctionSymbol = createFunctionSymbolFromTerm(currentTerm);
-                // add this new function
-                ((FunctionSymbol) root).getSubterms().add(currentFunctionSymbol);
-                currentFunctionSymbol.setParent(root);
+        if (currentTerm instanceof FunctionSymbol) {
+            // handle FunctionSymbols
+            FunctionSymbol currentFunctionSymbol = createFunctionSymbolFromTerm(currentTerm);
+            // add this new function to the tree
+            ((FunctionSymbol) root).getSubterms().add(currentFunctionSymbol);
+            currentFunctionSymbol.setParent(root);
 
-                if (functionParts.length > 1) {
-                    // check good arity with regard to the remaining input variables
-                    String variables[] = getCurrentLevelVariablesFromInputString(functionParts[1]);
-                    if (variables.length == currentFunctionSymbol.getArity()) {
-                        for (String variable : variables) {
-                            parseStringToTerm(variable, currentFunctionSymbol);
-                        }
-                    } else {
-                        throw new TermException("bad input string: not enough parameters in the inputString for functionSymbol " + currentFunctionSymbol);
-                    }
-                } else if (currentFunctionSymbol.getArity() > 0) {
-                    throw new TermException("bad input string: too many parameters in the inputString for functionSymbol " + currentFunctionSymbol);
-                }
-            } else if (currentTerm instanceof VariableSymbol) {
-                // handle Variables
-                VariableSymbol currentVariable = createVariableFromTerm(currentTerm);
-                // add this new variable
-                ((FunctionSymbol) root).getSubterms().add(currentVariable);
-                currentVariable.setParent(root);
-
+            if (functionParts.length > 1) {
                 // check good arity with regard to the remaining input variables
-                if (functionParts.length > 1) {
-                    throw new TermException("bad input string: a variable should have no parameters in the inputString " + currentVariable);
+                String variables[] = getCurrentLevelVariablesFromInputString(functionParts[1]);
+                if (variables.length == currentFunctionSymbol.getArity()) {
+                    for (String variable : variables) {
+                        parseStringToTerm(variable, currentFunctionSymbol);
+                    }
+                } else {
+                    throw new TermException("bad input string: different number of parameters in the inputString: \"" + functionParts[1] + "\" for "
+                            + currentFunctionSymbol);
                 }
+            } else if (currentFunctionSymbol.getArity() > 0) {
+                throw new TermException("bad input string: too many parameters in the inputString for functionSymbol " + currentFunctionSymbol);
             }
         } else {
-            throw new TermException("term not part of the language: " + functionParts[0]);
+            // handle variables
+            VariableSymbol currentVariable;
+            if (functionParts.length > 1) {
+                // check good arity with regard to the remaining input string (a variable MUST NOT have any subterms)
+                throw new TermException("bad input string: a variable should have no parameters in the inputString (variable name is: " + functionParts[0]
+                        + ")");
+            } else if (currentTerm instanceof VariableSymbol) {
+                // handle Variables already added to the language
+                currentVariable = createVariableFromTerm(currentTerm);
+                // create a new instance of this variable
+            } else {
+                // handle variables not added to the language yet
+                currentVariable = createVariable(functionParts[0]);
+                getLanguage().addTerm(currentVariable);
+            }
+            ((FunctionSymbol) root).getSubterms().add(currentVariable);
+            currentVariable.setParent(root);
         }
     }
 
-    private String[] getCurrentLevelVariablesFromInputString(String inputString) {
+    public VariableSymbol createVariable(String symbol) {
+        return new VariableSymbol(symbol);
+    }
+
+    private String[] getCurrentLevelVariablesFromInputString(String inputString) throws TermException {
         List<String> variables = new ArrayList<String>();
         int len = inputString.length();
         int openParantheses = 0;
@@ -127,9 +135,53 @@ public class TermUtils {
                 continue;
             }
         }
-        variables.add(inputString.substring(lastUsedPositionForSplitting, len));
-
+        if (len > 0) {
+            // i can have a constant like const(), which is correct but there is nothing to add
+            variables.add(inputString.substring(lastUsedPositionForSplitting, len));
+        }
         return variables.toArray(new String[0]);
+    }
+
+    private void checkIfStringIsWellFormed(String inputString) throws TermException {
+        int openParantheses = 0;
+        boolean haveFoundPharantheses = false;
+        int len = inputString.length();
+        for (int i = 0; i < len; ++i) {
+            if (inputString.startsWith("(", i)) {
+                haveFoundPharantheses = true;
+                openParantheses++;
+                continue;
+            }
+            if (inputString.startsWith(")", i)) {
+                openParantheses--;
+                continue;
+            }
+
+            try {
+                if (inputString.startsWith(",", i)) {
+                    if (inputString.startsWith(",", i + 1)) {
+                        throw new TermException("bad input string: the input string \"" + inputString
+                                + "\" is bad formed (the term delimiter is at a wrong position)");
+                    }
+                }
+            } catch (TermException e) {
+                throw e;
+            } catch (Exception e) {
+                // do nothing, i am accessing outside the string
+            }
+        }
+        if (openParantheses != 0) {
+            // this is a bad input string because the number of parantheses is wrong
+            throw new TermException("bad input string: the input string \"" + inputString + "\" is bad formed (the number of parantheses is wrong)");
+        }
+
+        // this is used for input strings like this: "aaaa, av"
+        if (!haveFoundPharantheses && inputString.contains(",")) {
+            throw new TermException("bad input string: the input string \"" + inputString + "\" is bad formed (there shouldn't be any term delimiters)");
+        }
+        if (inputString.startsWith(",")) {
+            throw new TermException("bad input string: the input string \"" + inputString + "\" is bad formed (the term delimiter is at a wrong position)");
+        }
     }
 
     private void deepToString(Term root, StringBuilder out, int indent) throws TermException {
@@ -162,11 +214,20 @@ public class TermUtils {
      * @throws TermNotPartOfTheLanguageException
      */
     public Term parseStringToTerm(String inputString) throws TermException {
+        checkIfStringIsWellFormed(inputString);
+
         Term root = new FunctionSymbol(VIRTUAL_FUNCTION_SYMBOL_FOR_PARSING, 1);
 
         parseStringToTerm(inputString, root);
 
-        return getSubterm(root, new int[] { 0 });
+        // get rid of the virtual functionsymbol
+        root = getSubterm(root, new int[] { 0 });
+        if (root instanceof FunctionSymbol) {
+            ((FunctionSymbol) root).setParent(null);
+        } else {
+            ((VariableSymbol) root).setParent(null);
+        }
+        return root;
     }
 
     /**

@@ -6,8 +6,7 @@ import java.util.List;
 import tbp.termrewriter.term.Term;
 
 /**
- * This represents a function symbol. There are no setters as we do not want to
- * change the symbol of this function. If such need arises, then a new
+ * This represents a function symbol. There are no setters as we do not want to change the symbol of this function. If such need arises, then a new
  * FunctionSymbol should be created!
  */
 
@@ -49,7 +48,7 @@ public class FunctionSymbol implements Term {
 
     @Override
     public String toString() {
-        return "FunctionSymbol [arity=" + arity + ", symbol=" + symbol + "]";
+        return "FunctionSymbol [symbol=" + symbol + ", arity=" + arity + "]";
     }
 
     /**
