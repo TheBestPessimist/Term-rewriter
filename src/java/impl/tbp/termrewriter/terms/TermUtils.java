@@ -1,7 +1,9 @@
 package tbp.termrewriter.terms;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import tbp.termrewriter.exceptions.TermException;
 import tbp.termrewriter.language.Language;
@@ -280,6 +282,55 @@ public class TermUtils {
         }
         // TODO nothing should be here. EXCEPTION!!!
         return null;
+    }
+
+    public Term substitute(final Term root, Term[] initialTerms, Term[] substitutionTerms) throws TermException {
+        if (root == null) {
+            throw new TermException("root shouldn't be null");
+        }
+        if (initialTerms.length != substitutionTerms.length) {
+            // TODO what should i do here? exception or null?
+            throw new TermException("initialTerm and substitutionTerms don't have the same length!");
+        }
+
+        // since root is final, a new root is needed
+        Term substitutedRoot = deepCopyTerm(root);
+
+        Map<Term, Term[]> termsForSubstitution = new LinkedHashMap<Term, Term[]>();
+
+        for (Term t : initialTerms) {
+            termsForSubstitution.put(t, deepFindAllMatches(substitutedRoot, t));
+        }
+
+        // //////////////////////////
+        // for (Map.Entry<Term, Term[]> i : termsForSubstitution.entrySet()) {
+        // System.out.print(i.getKey() + ": ");
+        // for (Term t : i.getValue()) {
+        // System.out.print(t + ", ");
+        // }
+        // System.out.println();
+        // }
+        // //////////////////////////
+        int iterator = 0;
+        for (Map.Entry<Term, Term[]> i : termsForSubstitution.entrySet()) {
+            for (Term t : i.getValue()) {
+                if (t instanceof FunctionSymbol) {
+                    FunctionSymbol currentTerm = (FunctionSymbol) t;
+                    FunctionSymbol parent = (FunctionSymbol) currentTerm.getParent();
+                    int currentTermPosition = parent.getSubterms().indexOf(currentTerm);
+                    parent.getSubterms().set(currentTermPosition, deepCopyTerm(substitutionTerms[iterator]));
+                    currentTerm.setParent(null);
+                } else {
+                    VariableSymbol currentTerm = (VariableSymbol) t;
+                    FunctionSymbol parent = (FunctionSymbol) currentTerm.getParent();
+                    int currentTermPosition = parent.getSubterms().indexOf(currentTerm);
+                    parent.getSubterms().set(currentTermPosition, deepCopyTerm(substitutionTerms[iterator]));
+                    currentTerm.setParent(null);
+                }
+            }
+            iterator++;
+        }
+        return substitutedRoot;
     }
 
     /**
