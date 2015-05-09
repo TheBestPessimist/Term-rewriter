@@ -8,6 +8,10 @@
 - ca sa implementez acel function match, eu tre sa ma plimb prin tot treeul,si sa caut functii, care se aplica la functii, si variabile.. variabilele pot sa fie diferite! practic e shittons of recursive calls.
 
 ### Questions
+la substitution: ce se intampla daca am 2 variablie care vreau sa le substitui, si una e in interiorul celeilalte?
+eg: root = f(g(c,1,y),e(f(e(g(c,1,y)),g(c,1,y))))
+subst 1: f(g(c,1,y),e(f(e(g(c,1,y)),g(c,1,y)))) -> 1
+subst 2: 1 -> 555555555
 
 	
 ### Done
