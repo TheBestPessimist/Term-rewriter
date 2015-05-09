@@ -1,7 +1,4 @@
 ### TODO
-2. substitution of a variable with a term;
-3. rename getSubterm to getSubtermByPosition
-4. rename variable symbol to variable
 
 - trebuie peste tot checkuri daca face parte din language
 - sa implementez substitution of a term with another.
@@ -31,6 +28,9 @@ subst 2: 1 -> 555555555
 - la parsarea termenilor din string, sa se implementeze cazul pentru Variable
 - trebuie override la equals de la clasa object!
 - collect variable names during parsing
+- substitution of a variable with a term;
+- rename getSubterm to getSubtermByPosition
+- rename variable symbol to variable
 
 
 
