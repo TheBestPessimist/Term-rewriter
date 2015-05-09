@@ -50,9 +50,9 @@ public class TermUtils {
      * @param term
      * @return the newly created variable, or null if the term is not a variable
      */
-    private VariableSymbol createVariableFromTerm(Term term) {
-        if (term instanceof VariableSymbol) {
-            return new VariableSymbol(term.getSymbol());
+    private Variable createVariableFromTerm(Term term) {
+        if (term instanceof Variable) {
+            return new Variable(term.getSymbol());
         }
         // not a VariableException?
         System.out.println("the term " + term + " is not a variable");
@@ -94,12 +94,12 @@ public class TermUtils {
             }
         } else {
             // handle variables
-            VariableSymbol currentVariable;
+            Variable currentVariable;
             if (functionParts.length > 1) {
                 // check good arity with regard to the remaining input string (a variable MUST NOT have any subterms)
                 throw new TermException("bad input string: a variable should have no parameters in the inputString (variable name is: " + functionParts[0]
                         + ")");
-            } else if (currentTerm instanceof VariableSymbol) {
+            } else if (currentTerm instanceof Variable) {
                 // handle Variables already added to the language
                 currentVariable = createVariableFromTerm(currentTerm);
                 // create a new instance of this variable
@@ -113,8 +113,8 @@ public class TermUtils {
         }
     }
 
-    public VariableSymbol createVariable(String symbol) {
-        return new VariableSymbol(symbol);
+    public Variable createVariable(String symbol) {
+        return new Variable(symbol);
     }
 
     private String[] getCurrentLevelVariablesFromInputString(String inputString) throws TermException {
@@ -197,7 +197,7 @@ public class TermUtils {
                 }
                 deepToString(subterm, out, indent + 1);
             }
-        } else if (root instanceof VariableSymbol) {
+        } else if (root instanceof Variable) {
             // this is already handled above
         } else {
             throw new TermException("" + root + " is not a term");
@@ -223,11 +223,11 @@ public class TermUtils {
         parseStringToTerm(inputString, root);
 
         // get rid of the virtual functionsymbol
-        root = getSubterm(root, new int[] { 0 });
+        root = getSubtermByPosition(root, new int[] { 0 });
         if (root instanceof FunctionSymbol) {
             ((FunctionSymbol) root).setParent(null);
         } else {
-            ((VariableSymbol) root).setParent(null);
+            ((Variable) root).setParent(null);
         }
         return root;
     }
@@ -243,12 +243,11 @@ public class TermUtils {
      * @return
      */
     // TODO should throw subterm does not exist exception?
-
-    public Term getSubterm(Term root, int[] subtermPositions) {
-        return getSubtermRecursively(root, subtermPositions, 0);
+    public Term getSubtermByPosition(Term root, int[] subtermPositions) {
+        return getSubtermByPositionRecursively(root, subtermPositions, 0);
     }
 
-    private Term getSubtermRecursively(Term root, int[] inputSubtermPositions, int currentPosition) {
+    private Term getSubtermByPositionRecursively(Term root, int[] inputSubtermPositions, int currentPosition) {
         if (root instanceof FunctionSymbol) {
             FunctionSymbol currentFunctionSymbol = (FunctionSymbol) root;
             int subtermsSize = currentFunctionSymbol.getSubterms().size();
@@ -264,15 +263,15 @@ public class TermUtils {
                 if (currentPosition == inputSubtermPositions.length - 1) {
                     return currentFunctionSymbol.getSubterms().get(inputSubtermPositions[currentPosition]);
                 } else {
-                    return getSubtermRecursively(currentFunctionSymbol.getSubterms().get(inputSubtermPositions[currentPosition]), inputSubtermPositions,
-                            ++currentPosition);
+                    return getSubtermByPositionRecursively(currentFunctionSymbol.getSubterms().get(inputSubtermPositions[currentPosition]),
+                            inputSubtermPositions, ++currentPosition);
                 }
             } else {
                 // TODO i can't address outside of any of the 2 arrays. exception?
                 return null;
             }
-        } else if (root instanceof VariableSymbol) {
-            VariableSymbol currentVariable = (VariableSymbol) root;
+        } else if (root instanceof Variable) {
+            Variable currentVariable = (Variable) root;
             if (currentPosition == inputSubtermPositions.length - 1) {
                 return currentVariable;
             } else {
@@ -321,7 +320,7 @@ public class TermUtils {
                     parent.getSubterms().set(currentTermPosition, deepCopyTerm(substitutionTerms[iterator]));
                     currentTerm.setParent(null);
                 } else {
-                    VariableSymbol currentTerm = (VariableSymbol) t;
+                    Variable currentTerm = (Variable) t;
                     FunctionSymbol parent = (FunctionSymbol) currentTerm.getParent();
                     int currentTermPosition = parent.getSubterms().indexOf(currentTerm);
                     parent.getSubterms().set(currentTermPosition, deepCopyTerm(substitutionTerms[iterator]));
@@ -361,7 +360,7 @@ public class TermUtils {
                     newTerm.setParent(newRoot);
                     deepCopyTermRecursive(newTerm, subterm);
                 } else {
-                    VariableSymbol newTerm = createVariableFromTerm(subterm);
+                    Variable newTerm = createVariableFromTerm(subterm);
                     newRoot.getSubterms().add(newTerm);
                     newTerm.setParent(newRoot);
                 }
@@ -401,7 +400,7 @@ public class TermUtils {
             for (int i = 0; i < len; i++) {
                 // variables are ignored, since a variable can have any name. the only thing that matters is to have a variable at the exact same position in
                 // both terms
-                if (termSignature[i] instanceof VariableSymbol && anotherTermSignature[i] instanceof VariableSymbol) {
+                if (termSignature[i] instanceof Variable && anotherTermSignature[i] instanceof Variable) {
                     continue;
                 }
                 // only functions really matter when doing deep equals
@@ -434,7 +433,7 @@ public class TermUtils {
             for (Term subterm : subterms) {
                 getAllTermsRecursively(terms, subterm);
             }
-        } else if (root instanceof VariableSymbol) {
+        } else if (root instanceof Variable) {
             // this is already handled above
         } else {
             throw new TermException("" + root + " is not a term");
