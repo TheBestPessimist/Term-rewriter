@@ -282,18 +282,56 @@ public class TermUtils {
         return null;
     }
 
-    //
-    // public Term substitute(Term root, Term[] initialTerms, Term[] substitutionTerms) throws TermException {
-    // if (root == null) {
-    // throw new TermException("root shouldn't be null");
-    // }
-    // if (initialTerms.length != substitutionTerms.length) {
-    // // TODO what should i do here? exception or null?
-    // throw new TermException("initialTerm and substitutionTerms don't have the same length!");
-    // }
-    //
-    // return null;
-    // }
+    /**
+     * Makes a deep copy of a term and all its subterms.
+     * 
+     * @param t
+     * @return
+     * @throws TermException
+     */
+    public Term deepCopyTerm(Term root) throws TermException {
+        Term newRoot;
+        if (root instanceof FunctionSymbol) {
+            newRoot = createFunctionSymbolFromTerm(root);
+            deepCopyTermRecursive((FunctionSymbol) newRoot, root);
+        } else {
+            newRoot = createVariableFromTerm(root);
+        }
+        return newRoot;
+    }
+
+    private void deepCopyTermRecursive(FunctionSymbol newRoot, Term root) throws TermException {
+        if (root instanceof FunctionSymbol) {
+            for (Term subterm : ((FunctionSymbol) root).getSubterms()) {
+                if (subterm instanceof FunctionSymbol) {
+                    FunctionSymbol newTerm = createFunctionSymbolFromTerm(subterm);
+                    newRoot.getSubterms().add(newTerm);
+                    newTerm.setParent(newRoot);
+                    deepCopyTermRecursive(newTerm, subterm);
+                } else {
+                    VariableSymbol newTerm = createVariableFromTerm(subterm);
+                    newRoot.getSubterms().add(newTerm);
+                    newTerm.setParent(newRoot);
+                }
+            }
+        } else {
+            VariableSymbol newTerm = createVariableFromTerm(root);
+            newRoot.getSubterms().add(newTerm);
+            newTerm.setParent(newRoot);
+        }
+    }
+
+    public Term[] deepFindAllMatches(Term root, Term termToBeMatched) throws TermException {
+        Term[] rootSignature = getAllTerms(root);
+        List<Term> matchedTerms = new ArrayList<Term>();
+
+        for (Term t : rootSignature) {
+            if (deepEquals(t, termToBeMatched)) {
+                matchedTerms.add(t);
+            }
+        }
+        return matchedTerms.toArray(new Term[0]);
+    }
 
     /**
      * Equals but taking into account the structure of the Term (eg.: if the tree of the 2 functions is the same (same function calls in the same order,
