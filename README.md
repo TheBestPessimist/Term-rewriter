@@ -1,5 +1,7 @@
 ### TODO
-2 substitution of a variable with a term;
+2. substitution of a variable with a term;
+3. rename getSubterm to getSubtermByPosition
+4. rename variable symbol to variable
 
 - trebuie peste tot checkuri daca face parte din language
 - sa implementez substitution of a term with another.

@@ -14,16 +14,32 @@ public class Main {
         LanguageParser languageParser = new LanguageParser(new File("resources/language.json"));
         utils.setLanguage(languageParser.readLanguage());
 
-        String inputString = "f(c,e(f(e(c),g(c,1,y))))";
-        // String inputString = "()aaaa av";
-        // String inputString = "1()";
-        // String inputString = "f(aaaa, aaaa)";
-        // String inputString = "g(c,1,y)";
+        String inputString = "";
+
+        inputString = "()aaaa av";
+        inputString = "f(hghghghghghg,e(f(e(c),g(c,1,y))))";
+        // inputString = "1()";
+        // inputString = "f(aaaa, babahsjdbsajhdbajh-sda)";
         Term root = utils.parseStringToTerm(inputString);
 
-        Term subterm = utils.getSubterm(root, new int[] { 1, 0, 1 });
+        Term subterm = utils.getSubterm(root, new int[] { 0, });
+        inputString = "f(ew,e(f(e(c),g(c,1,y))))";
 
-        System.out.println(utils.deepToString(root));
-        System.out.println(utils.deepToString(subterm));
+        Term root2 = utils.parseStringToTerm(inputString);
+
+        // Term subterm2 = utils.getSubterm(root2, new int[] { 2, });
+
+        //
+        // System.out.println(utils.deepToString(root));
+        // System.out.println(utils.deepToString(subterm));
+        // Term[] allTerms = utils.getAllTerms(root);
+        // for (Term t : allTerms) {
+        // System.out.println(t);
+        // }
+        // for (Term t : utils.getAllTerms(allTerms[0])) {
+        // System.out.println(t);
+        // }
+
+        System.out.println(utils.deepEquals(root, root2));
     }
 }
