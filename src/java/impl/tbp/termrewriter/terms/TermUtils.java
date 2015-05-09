@@ -291,6 +291,7 @@ public class TermUtils {
      */
     public Term deepCopyTerm(Term root) throws TermException {
         Term newRoot;
+        // must first handle the root case
         if (root instanceof FunctionSymbol) {
             newRoot = createFunctionSymbolFromTerm(root);
             deepCopyTermRecursive((FunctionSymbol) newRoot, root);
@@ -314,10 +315,6 @@ public class TermUtils {
                     newTerm.setParent(newRoot);
                 }
             }
-        } else {
-            VariableSymbol newTerm = createVariableFromTerm(root);
-            newRoot.getSubterms().add(newTerm);
-            newTerm.setParent(newRoot);
         }
     }
 
