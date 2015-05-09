@@ -26,7 +26,7 @@ public class Language {
 
     public Term getTermBySymbol(String symbol) {
         for (Term t : terms) {
-            if (t.equals(symbol)) {
+            if (t.getSymbol().equals(symbol)) {
                 return t;
             }
         }
