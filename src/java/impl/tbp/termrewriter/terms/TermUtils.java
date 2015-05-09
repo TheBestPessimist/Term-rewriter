@@ -1,7 +1,9 @@
 package tbp.termrewriter.terms;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import tbp.termrewriter.exceptions.TermException;
 import tbp.termrewriter.language.Language;
@@ -280,5 +282,163 @@ public class TermUtils {
         }
         // TODO nothing should be here. EXCEPTION!!!
         return null;
+    }
+
+    public Term substitute(final Term root, Term[] initialTerms, Term[] substitutionTerms) throws TermException {
+        if (root == null) {
+            throw new TermException("root shouldn't be null");
+        }
+        if (initialTerms.length != substitutionTerms.length) {
+            // TODO what should i do here? exception or null?
+            throw new TermException("initialTerm and substitutionTerms don't have the same length!");
+        }
+
+        // since root is final, a new root is needed
+        Term substitutedRoot = deepCopyTerm(root);
+
+        Map<Term, Term[]> termsForSubstitution = new LinkedHashMap<Term, Term[]>();
+
+        for (Term t : initialTerms) {
+            termsForSubstitution.put(t, deepFindAllMatches(substitutedRoot, t));
+        }
+
+        // //////////////////////////
+        // for (Map.Entry<Term, Term[]> i : termsForSubstitution.entrySet()) {
+        // System.out.print(i.getKey() + ": ");
+        // for (Term t : i.getValue()) {
+        // System.out.print(t + ", ");
+        // }
+        // System.out.println();
+        // }
+        // //////////////////////////
+        int iterator = 0;
+        for (Map.Entry<Term, Term[]> i : termsForSubstitution.entrySet()) {
+            for (Term t : i.getValue()) {
+                if (t instanceof FunctionSymbol) {
+                    FunctionSymbol currentTerm = (FunctionSymbol) t;
+                    FunctionSymbol parent = (FunctionSymbol) currentTerm.getParent();
+                    int currentTermPosition = parent.getSubterms().indexOf(currentTerm);
+                    parent.getSubterms().set(currentTermPosition, deepCopyTerm(substitutionTerms[iterator]));
+                    currentTerm.setParent(null);
+                } else {
+                    VariableSymbol currentTerm = (VariableSymbol) t;
+                    FunctionSymbol parent = (FunctionSymbol) currentTerm.getParent();
+                    int currentTermPosition = parent.getSubterms().indexOf(currentTerm);
+                    parent.getSubterms().set(currentTermPosition, deepCopyTerm(substitutionTerms[iterator]));
+                    currentTerm.setParent(null);
+                }
+            }
+            iterator++;
+        }
+        return substitutedRoot;
+    }
+
+    /**
+     * Makes a deep copy of a term and all its subterms.
+     * 
+     * @param t
+     * @return
+     * @throws TermException
+     */
+    public Term deepCopyTerm(Term root) throws TermException {
+        Term newRoot;
+        // must first handle the root case
+        if (root instanceof FunctionSymbol) {
+            newRoot = createFunctionSymbolFromTerm(root);
+            deepCopyTermRecursive((FunctionSymbol) newRoot, root);
+        } else {
+            newRoot = createVariableFromTerm(root);
+        }
+        return newRoot;
+    }
+
+    private void deepCopyTermRecursive(FunctionSymbol newRoot, Term root) throws TermException {
+        if (root instanceof FunctionSymbol) {
+            for (Term subterm : ((FunctionSymbol) root).getSubterms()) {
+                if (subterm instanceof FunctionSymbol) {
+                    FunctionSymbol newTerm = createFunctionSymbolFromTerm(subterm);
+                    newRoot.getSubterms().add(newTerm);
+                    newTerm.setParent(newRoot);
+                    deepCopyTermRecursive(newTerm, subterm);
+                } else {
+                    VariableSymbol newTerm = createVariableFromTerm(subterm);
+                    newRoot.getSubterms().add(newTerm);
+                    newTerm.setParent(newRoot);
+                }
+            }
+        }
+    }
+
+    public Term[] deepFindAllMatches(Term root, Term termToBeMatched) throws TermException {
+        Term[] rootSignature = getAllTerms(root);
+        List<Term> matchedTerms = new ArrayList<Term>();
+
+        for (Term t : rootSignature) {
+            if (deepEquals(t, termToBeMatched)) {
+                matchedTerms.add(t);
+            }
+        }
+        return matchedTerms.toArray(new Term[0]);
+    }
+
+    /**
+     * Equals but taking into account the structure of the Term (eg.: if the tree of the 2 functions is the same (same function calls in the same order,
+     * disregarding the variable names), then (probably?) the 2 terms are deepEquals.
+     * 
+     * @param term
+     * @param anotherTerm
+     * @return true if the terms are deepEquals false otherwise.
+     * @throws TermException
+     */
+    public boolean deepEquals(Term term, Term anotherTerm) throws TermException {
+        Term[] termSignature = getAllTerms(term);
+        Term[] anotherTermSignature = getAllTerms(anotherTerm);
+
+        if (termSignature.length != anotherTermSignature.length) {
+            return false;
+        } else {
+            int len = termSignature.length;
+            for (int i = 0; i < len; i++) {
+                // variables are ignored, since a variable can have any name. the only thing that matters is to have a variable at the exact same position in
+                // both terms
+                if (termSignature[i] instanceof VariableSymbol && anotherTermSignature[i] instanceof VariableSymbol) {
+                    continue;
+                }
+                // only functions really matter when doing deep equals
+                if (!termSignature[i].equals(anotherTermSignature[i])) {
+                    return false;
+                }
+            }
+            // if im am here, the terms and their respective subterms are equal respectively
+            return true;
+        }
+    }
+
+    /**
+     * Gives a list with all the terms and subterms in the tree, by visiting the tree elements in pre-order. It gives the same list of terms for multiple calls
+     * on the same Term (it is consistent!).
+     * 
+     * @param root
+     * @return list of terms, starting with the root
+     * @throws TermException
+     */
+    public Term[] getAllTerms(Term root) throws TermException {
+        return getAllTermsRecursively(new ArrayList<Term>(), root);
+    }
+
+    private Term[] getAllTermsRecursively(ArrayList<Term> terms, Term root) throws TermException {
+        terms.add(root);
+
+        if (root instanceof FunctionSymbol) {
+            List<Term> subterms = ((FunctionSymbol) root).getSubterms();
+            for (Term subterm : subterms) {
+                getAllTermsRecursively(terms, subterm);
+            }
+        } else if (root instanceof VariableSymbol) {
+            // this is already handled above
+        } else {
+            throw new TermException("" + root + " is not a term");
+        }
+        return terms.toArray(new Term[0]);
     }
 }

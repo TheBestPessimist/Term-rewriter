@@ -38,7 +38,11 @@ public class FunctionSymbol implements Term {
 
     @Override
     public boolean equals(Object obj) {
-        return getSymbol().equals(obj);
+        if (obj instanceof FunctionSymbol) {
+            FunctionSymbol f = (FunctionSymbol) obj;
+            return getSymbol().equals(f.getSymbol());
+        }
+        return false;
     }
 
     @Override

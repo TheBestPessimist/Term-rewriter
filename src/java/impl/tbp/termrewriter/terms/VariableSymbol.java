@@ -3,8 +3,7 @@ package tbp.termrewriter.terms;
 import tbp.termrewriter.term.Term;
 
 /**
- * This represents a variable symbol. There are no setters as we do not want to
- * change the symbol of this VariableSymbol. If such need arises, then a new
+ * This represents a variable symbol. There are no setters as we do not want to change the symbol of this VariableSymbol. If such need arises, then a new
  * VariableSymbol should be created!
  */
 
@@ -39,7 +38,11 @@ public class VariableSymbol implements Term {
 
     @Override
     public boolean equals(Object obj) {
-        return getSymbol().equals(obj);
+        if (obj instanceof VariableSymbol) {
+            VariableSymbol v = (VariableSymbol) obj;
+            return getSymbol().equals(v.getSymbol());
+        }
+        return false;
     };
 
     @Override
